@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FICSIT Companion Master (Interaktive Phasen)</title>
+    <style>
+        :root {
+            --ficsit-orange: #fa9549;
+            --ficsit-dark: #121212;
+            --ficsit-panel: #1e1e1e;
+            --ficsit-border: #383838;
+            --ficsit-text: #e0e0e0;
+            --ficsit-green: #4caf50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--ficsit-dark);
+            color: var(--ficsit-text);
+            margin: 0;
+            padding: 15px;
+        }
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--ficsit-orange);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        h1 { color: var(--ficsit-orange); margin: 0; font-size: 1.6rem; }
+        p.subtitle { color: #888; font-size: 0.9rem; margin: 5px 0 0 0; }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .tab-btn {
+            background-color: var(--ficsit-panel);
+            color: var(--ficsit-text);
+            border: 1px solid var(--ficsit-border);
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--ficsit-orange);
+            color: #000;
+            border-color: var(--ficsit-orange);
+        }
+        .section {
+            display: none;
+            background-color: var(--ficsit-panel);
+            border: 1px solid var(--ficsit-border);
+            padding: 18px;
+            border-radius: 8px;
+            max-width: 850px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .section.active { display: block; }
+        
+        input, select {
+            background: #141414;
+            color: #fff;
+            border: 1px solid var(--ficsit-border);
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .calc-result, .detail-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #141414;
+            border-left: 4px solid var(--ficsit-orange);
+            border-radius: 4px;
+            line-height: 1.6;
+        }
+        .ascii-art {
+            background: #111;
+            color: #4caf50;
+            font-family: monospace;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--ficsit-border);
+            white-space: pre;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.2;
+            margin: 15px 0;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--ficsit-border);
+        }
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--ficsit-orange);
+            cursor: pointer;
+        }
+        ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FICSIT Companion Master</h1>
+        <p class="subtitle">Satisfactory 1.0 – Interaktiver Phasen- & Maschinenführer</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'phases')">Phasen-Guide</button>
+        <button class="tab-btn" onclick="switchTab(event, 'calc')">100% Takt-Rechner</button>
+        <button class="tab-btn" onclick="switchTab(event, 'blueprint')">Blueprint Skizze</button>
+        <button class="tab-btn" onclick="switchTab(event, 'checklist')">Checkliste</button>
+    </div>
+
+    <!-- Phasen Section -->
+    <div id="phases" class="section active">
+        <h2>Space Elevator Phasen-Auswahl</h2>
+        <p style="color:#aaa; font-size:0.85rem;">Wähle die Phase aus, bei der du gerade Unterstützung benötigst:</p>
+        
+        <label>Spielphase wählen:</label>
+        <select id="phaseSelect" onchange="updatePhaseDetails()">
+            <option value="1">Phase 1 (Smartes Blech & Automatisierung)</option>
+            <option value="2">Phase 2 (Öl, Züge & Frameworks)</option>
+            <option value="3">Phase 3 (Aluminium & Adaptive Einheiten)</option>
+            <option value="4">Phase 4 (Klassisches Endgame & Raketen)</option>
+            <option value="5">Phase 5 (Satisfactory 1.0 Quanten-Finale)</option>
+        </select>
+
+        <div id="phaseDetailContainer" class="detail-box">
+            <!-- Dynamischer Inhalt -->
+        </div>
+    </div>
+
+    <!-- Rechner Section -->
+    <div id="calc" class="section">
+        <h2>100% Effizienz & Maschinen-Rechner</h2>
+        <p style="color:#aaa; font-size:0.85rem;">Berechne exakt, wie viele Maschinen du brauchst und wie du die Taktfrequenz einstellen musst.</p>
+        
+        <label>Bauteil wählen:</label>
+        <select id="itemSelect" onchange="calculate()">
+            <option value="smart">Smartes Blech (Smart Plating)</option>
+            <option value="framework">Vielseitiges Framework (Versatile Framework)</option>
+            <option value="wiring">Automatisierte Verkabelung (Automated Wiring)</option>
+            <option value="motor">Modulmotor (Modular Engine)</option>
+            <option value="acu">Adaptive Steuereinheit (Adaptive Control Unit)</option>
+            <option value="thermal">Thermische Antriebsrakete (Thermal Propulsion Rocket)</option>
+            <option value="assembly">Montageleiter-System (Assembly Director System)</option>
+            <option value="pasta">Nukleare Pasta (Nuclear Pasta - Partikelbeschleuniger)</option>
+            <option value="warp">Ballistischer Warpantrieb (Ballistic Warp Drive)</option>
+        </select>
+
+        <label style="margin-top: 15px; display:block;">Ziel-Produktion (Stück pro Minute):</label>
+        <input type="number" id="targetRate" value="2" min="0.1" step="0.5" oninput="calculate()">
+
+        <div class="calc-result" id="calcResult"></div>
+    </div>
+
+    <!-- Blueprint Skizze Section -->
+    <div id="blueprint" class="section">
+        <h2>Effiziente Blueprint-Skizze (4x4 Designer)</h2>
+        <p>So baust du ein standardisiertes <strong>4er-Konstruktor/Schmelzen-Modul</strong> im Mk.1 Blueprint Designer, das sich nahtlos stapeln lässt:</p>
+        
+        <div class="ascii-art">
+[Wand-Stromanschluss] (Zentral für die Stromversorgung)
++---------------------------------------------------+
+|  [Input-Fließband / Manifold von hinten]          |
+|    |           |           |           |          |
+|  [Splitter]  [Splitter]  [Splitter]  [Splitter]   |
+|    |           |           |           |          |
+| [Mach. 1]   [Mach. 2]   [Mach. 3]   [Mach. 4]     |
+|    |           |           |           |          |
+|  [Merger]    [Merger]    [Merger]    [Merger]     |
+|    \           \           /           /          |
+|  [Output-Fließband nach vorn zur nächsten Modul-Reihe]|
++---------------------------------------------------+
+        </div>
+        <p><strong>Tipp für den Bau:</strong> Platziere in der Mitte der Rückwand einen doppelten Wand-Stromanschluss. Verbinde ihn intern mit allen 4 Maschinen. Wenn du das Modul in der Welt platzierst, musst du nur noch den Hauptstrom an diesen einen Punkt anschließen – alle Maschinen laufen sofort!</p>
+    </div>
+
+    <!-- Checklist Section -->
+    <div id="checklist" class="section">
+        <h2>Phasen-Fortschritts-Checkliste</h2>
+        <p style="color:#aaa; font-size:0.85rem;">Wird automatisch im Browser gespeichert.</p>
+        <div id="checklistContainer"></div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            let sections = document.getElementsByClassName("section");
+            for (let s of sections) s.classList.remove("active");
+            let btns = document.getElementsByClassName("tab-btn");
+            for (let b of btns) b.classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Dynamische Phasen-Details
+        function updatePhaseDetails() {
+            const phase = document.getElementById('phaseSelect').value;
+            let html = "";
+
+            if (phase === "1") {
+                html = `
+                    <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 1 – 50x Smartes Blech (Smart Plating)</h3>
+                    <p><strong>Hauptziel:</strong> Automatisierung aufbauen, Kohlekraft vorbereiten und den <strong>Blueprint Designer Mk.1</strong> freischalten.</p>
+                    <h4>📦 Benötigte Rohstoffe & Zwischenprodukte (für 2 Stk/Min):</h4>
+                    <ul>
+                        <li><strong>Eisenerz:</strong> 120 / Min</li>
+                        <li><strong>Eisenbarren:</strong> 120 / Min</li>
+                        <li><strong>Eisenplatten:</strong> 20 / Min | <strong>Eisenstangen:</strong> 30 / Min</li>
+                        <li><strong>Schrauben:</strong> 240 / Min | <strong>Verstärkte Eisenplatten:</strong> 2 / Min | <strong>Rotoren:</strong> 2 / Min</li>
+                    </ul>
+                    <h4>🏭 Benötigte Maschinen & Taktung (100% Effizienz):</h4>
+                    <ul>
+                        <li><strong>4x Schmelze (Smelter):</strong> 120 Eisenbarren/Min (100% Takt)</li>
+                        <li><strong>1x Konstruktor (Platten):</strong> 20 Platten/Min (100% Takt)</li>
+                        <li><strong>2x Konstruktor (Stangen):</strong> 30 Stangen/Min (100% Takt)</li>
+                        <li><strong>6x Konstruktor (Schrauben):</strong> 240 Schrauben/Min (100% Takt)</li>
+                        <li><strong>1x Assembler (Verstärkte Platten):</strong> 2 Stk/Min (100% Takt)</li>
+                        <li><strong>1x Assembler (Rotoren):</strong> 2 Stk/Min (Getaktet auf 50%)</li>
+                        <li><strong>1x Assembler (Smartes Blech):</strong> Produziert <strong>2 Smartes Blech / Min</strong> (100% Takt)</li>
+                    </ul>
+                    <p>⏱️ <em>Dauer für 50 Stück:</em> Ca. 25 Minuten bei diesem Setup.</p>
+                `;
+            } else if (phase === "2") {
+                html = `
+                    <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 2 – Erdöl & Logistik Mk.4</h3>
+                    <p><strong>Erforderliche Lieferungen:</strong><br>
+                    - 500x Vielseitiges Framework (Versatile Framework)<br>
+                    - 500x Automatisierte Verkabelung (Automated Wiring)<br>
+                    - 100x Modulmotor (Modular Engine)</p>
+                    <p><strong>Freischaltungen:</strong> Tiers 5 & 6 (Öl-Verarbeitung, Treibstoff, Logistik Mk.4, Züge).</p>
+                    <h4>🏭 Empfohlene Maschinen-Struktur:</h4>
+                    <ul>
+                        <li><strong>Frameworks:</strong> 2x Assembler (benötigt Stahlträger & verstärkte Platten).</li>
+                        <li><strong>Verkabelung:</strong> 2x Assembler (benötigt Stator & Kabel).</li>
+                        <li><strong>Modulmotoren:</strong> 2x Hersteller (Manufacturer) – benötigt Motoren, Gummis, Smartes Blech und Schrauben. Sorge für eine stabile Öl-Kette für Kunststoff & Gummi!</li>
+                    </ul>
+                `;
+            } else if (phase === "3") {
+                html = `
+                    <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 3 – Aluminium & Schwere Logistik</h3>
+                    <p><strong>Erforderliche Lieferungen:</strong><br>
+                    - 2.500x Vielseitiges Framework<br>
+                    - 500x Modulmotor<br>
+                    - 100x Adaptive Steuereinheit (Adaptive Control Unit)</p>
+                    <p><strong>Freischaltungen:</strong> Tiers 7 & 8 (Aluminium-Verarbeitung, Kernkraft, Drohnen, Hoverpack).</p>
+                    <h4>🏭 Empfohlene Maschinen-Struktur:</h4>
+                    <ul>
+                        <li><strong>Adaptive Steuereinheiten:</strong> 2x Hersteller – benötigen automatisierte Verkabelung, schwere modulare Rahmen, Computer und Gummi.</li>
+                        <li><strong>Tipp:</strong> Baue hier deine erste zentrale Aluminium-Fabrik (Bauxit zu Aluminiumoxid zu Aluminiumbarren), da du sie massenhaft für Kühlkörper und Funksteuerungen brauchst.</li>
+                    </ul>
+                `;
+            } else if (phase === "4") {
+                html = `
+                    <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 4 – Klassisches Endgame</h3>
+                    <p><strong>Erforderliche Lieferungen:</strong><br>
+                    - 500x Montageleiter-System (Assembly Director System)<br>
+                    - 500x Magnetfeldgenerator (Magnetic Field Generator)<br>
+                    - 250x Thermische Antriebsrakete (Thermal Propulsion Rocket)<br>
+                    - 100x Nukleare Pasta (Nuclear Pasta)</p>
+                    <p><strong>Freischaltungen:</strong> Tier 9 / Vorbereitung auf Phase 5.</p>
+                    <h4>🏭 Wichtige Hinweise:</h4>
+                    <ul>
+                        <li><strong>Nukleare Pasta:</strong> Erfordert <strong>Partikelbeschleuniger</strong> (jeweils 1.500 MW Strombedarf!). Baue dafür ein massives Kernkraft- oder Turbokraftwerk-Polster.</li>
+                        <li>Verwende den 4x4 Blueprint Designer, um modulare Supercomputer- und Kühlkörper-Linien hochzuziehen.</li>
+                    </ul>
+                `;
+            } else if (phase === "5") {
+                html = `
+                    <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 5 – Satisfactory 1.0 Quanten-Finale</h3>
+                    <p><strong>Erforderliche Lieferungen:</strong><br>
+                    - 1.000x Nukleare Pasta<br>
+                    - 1.000x Biochemischer Former (Biochemical Sculptor)<br>
+                    - 256x KI-Erweiterungsserver (AI Expansion Server)<br>
+                    - 200x Ballistischer Warpantrieb (Ballistic Warp Drive)</p>
+                    <p><strong>Freischaltungen:</strong> Projektabschluss (Sieg von Satisfactory 1.0).</p>
+                    <h4>🏭 Endstufen-Fokus:</h4>
+                    <ul>
+                        <li>Nutze Quanten-Ressourcen und Dunkle Materie (Dark Matter) aus den interdimensionalen Extraktoren.</li>
+                        <li>Stelle sicher, dass deine High-Speed-Verbinder- und Supercomputer-Ketten auf Höchstleistung laufen, um den Ballistischen Warpantrieb zu füttern.</li>
+                    </ul>
+                `;
+            }
+
+            document.getElementById('phaseDetailContainer').innerHTML = html;
+        }
+
+        // Rechner Logik
+        function calculate() {
+            const item = document.getElementById('itemSelect').value;
+            const target = parseFloat(document.getElementById('targetRate').value) || 0;
+            
+            let baseRate = 2; 
+            let machineName = "Assembler";
+            let powerPerMachine = 15;
+            let itemNameDE = "Bauteil";
+
+            if (item === 'smart') { baseRate = 2; machineName = "Assembler"; powerPerMachine = 15; itemNameDE = "Smartes Blech"; }
+            else if (item === 'framework') { baseRate = 5; machineName = "Assembler"; powerPerMachine = 15; itemNameDE = "Vielseitiges Framework"; }
+            else if (item === 'wiring') { baseRate = 10; machineName = "Assembler"; powerPerMachine = 15; itemNameDE = "Automatisierte Verkabelung"; }
+            else if (item === 'motor') { baseRate = 3.75; machineName = "Hersteller (Manufacturer)"; powerPerMachine = 55; itemNameDE = "Modulmotor"; }
+            else if (item === 'acu') { baseRate = 1; machineName = "Hersteller (Manufacturer)"; powerPerMachine = 55; itemNameDE = "Adaptive Steuereinheit"; }
+            else if (item === 'thermal') { baseRate = 1; machineName = "Hersteller (Manufacturer)"; powerPerMachine = 250; itemNameDE = "Thermische Antriebsrakete"; }
+            else if (item === 'assembly') { baseRate = 0.75; machineName = "Hersteller (Manufacturer)"; powerPerMachine = 250; itemNameDE = "Montageleiter-System"; }
+            else if (item === 'pasta') { baseRate = 0.5; machineName = "Partikelbeschleuniger"; powerPerMachine = 1500; itemNameDE = "Nukleare Pasta"; }
+            else if (item === 'warp') { baseRate = 0.5; machineName = "Hersteller (Manufacturer)"; powerPerMachine = 250; itemNameDE = "Ballistischer Warpantrieb"; }
+
+            let exactMachinesNeeded = target / baseRate;
+            let fullMachines = Math.floor(exactMachinesNeeded);
+            let remainder = exactMachinesNeeded - fullMachines;
+
+            let outputHTML = `<strong>Auswertung für ${target} Stk/Min (${itemNameDE}):</strong><br><br>`;
+            
+            if (remainder < 0.01 && fullMachines > 0) {
+                let totalPower = fullMachines * powerPerMachine;
+                outputHTML += `- Benötigte ${machineName}: <strong>${fullMachines} Stück</strong><br>`;
+                outputHTML += `- Taktfrequenz (Clock Speed): Alle Maschinen auf genau <strong>100%</strong>.<br>`;
+                outputHTML += `- Strombedarf: ca. <strong>${totalPower} MW</strong><br>`;
+                outputHTML += `- <span style="color:var(--ficsit-green);">✔ Perfekter Betrieb zu 100% ohne Über- oder Untertaktung möglich!</span>`;
+            } else {
+                let machinesCount = Math.ceil(exactMachinesNeeded);
+                let totalBaseCapacity = machinesCount * baseRate;
+                let clockSpeedPercentage = (target / totalBaseCapacity) * 100;
+                let totalPower = Math.round(machinesCount * powerPerMachine * Math.pow(clockSpeedPercentage / 100, 1.32));
+
+                outputHTML += `- Benötigte ${machineName}: <strong>${machinesCount} Stück</strong><br>`;
+                outputHTML += `- Empfohlene Taktfrequenz: Stelle alle <strong>${machinesCount} Maschinen</strong> auf exakt <strong>${clockSpeedPercentage.toFixed(1)}%</strong> ein.<br>`;
+                outputHTML += `- Strombedarf: ca. <strong>${totalPower} MW</strong> (inkl. Skalierung)<br>`;
+                outputHTML += `- <span style="color:var(--ficsit-orange);">✔ So laufen alle Maschinen absolut synchron zu 100% Effizienz und es staut sich nichts!</span>`;
+            }
+
+            document.getElementById('calcResult').innerHTML = outputHTML;
+        }
+
+        // Checklisten-Logik
+        const tasks = [
+            "Phase 1 erreicht & Smartes Blech automatisiert",
+            "Kohlekraftwerk zur automatischen Stromversorgung errichtet",
+            "Blueprint Designer Mk.1 freigeschaltet und Module gebaut",
+            "Öl-Netzwerk und Treibstoff-Kraftwerke (Phase 2) aufgebaut",
+            "Aluminium-Kette und Züge (Phase 3) eingerichtet",
+            "Supercomputer & High-Speed-Verbinder Massenproduktion läuft",
+            "Kernkraft oder Groß-Turbokraftwerk für das Endgame installiert",
+            "Phase 4 & Phase 5 Endprodukte erfolgreich automatisiert"
+        ];
+
+        const checklistContainer = document.getElementById('checklistContainer');
+        tasks.forEach((task, index) => {
+            let checked = localStorage.getItem('ficsit_master_task_' + index) === 'true' ? 'checked' : '';
+            let div = document.createElement('div');
+            div.className = 'checklist-item';
+            div.innerHTML = `<input type="checkbox" id="task_${index}" ${checked} onclick="saveTask(${index})"><label for="task_${index}">${task}</label>`;
+            checklistContainer.appendChild(div);
+        });
+
+        function saveTask(index) {
+            let isChecked = document.getElementById('task_' + index).checked;
+            localStorage.setItem('ficsit_master_task_' + index, isChecked);
+        }
+
+        // Initialisierung beim Start
+        updatePhaseDetails();
+        calculate();
+    </script>
+</body>
+</html>
