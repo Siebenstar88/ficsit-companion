@@ -1,0 +1,9 @@
+{
+  "name": "FICSIT Companion Master",
+  "short_name": "FICSIT",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#fa9549",
+  "description": "Satisfactory 1.0 Companion App"
+}
