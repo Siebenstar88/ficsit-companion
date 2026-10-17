@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FICSIT Companion Master (Interaktive Phasen)</title>
+    <title>FICSIT Companion Master</title>
+    <!-- Verknüpfung für PWABuilder / Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#fa9549">
     <style>
         :root {
             --ficsit-orange: #fa9549;
@@ -141,9 +144,7 @@
             <option value="5">Phase 5 (Satisfactory 1.0 Quanten-Finale)</option>
         </select>
 
-        <div id="phaseDetailContainer" class="detail-box">
-            <!-- Dynamischer Inhalt -->
-        </div>
+        <div id="phaseDetailContainer" class="detail-box"></div>
     </div>
 
     <!-- Rechner Section -->
@@ -209,7 +210,6 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // Dynamische Phasen-Details
         function updatePhaseDetails() {
             const phase = document.getElementById('phaseSelect').value;
             let html = "";
@@ -241,15 +241,15 @@
                 html = `
                     <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 2 – Erdöl & Logistik Mk.4</h3>
                     <p><strong>Erforderliche Lieferungen:</strong><br>
-                    - 500x Vielseitiges Framework (Versatile Framework)<br>
-                    - 500x Automatisierte Verkabelung (Automated Wiring)<br>
-                    - 100x Modulmotor (Modular Engine)</p>
+                    - 500x Vielseitiges Framework<br>
+                    - 500x Automatisierte Verkabelung<br>
+                    - 100x Modulmotor</p>
                     <p><strong>Freischaltungen:</strong> Tiers 5 & 6 (Öl-Verarbeitung, Treibstoff, Logistik Mk.4, Züge).</p>
                     <h4>🏭 Empfohlene Maschinen-Struktur:</h4>
                     <ul>
                         <li><strong>Frameworks:</strong> 2x Assembler (benötigt Stahlträger & verstärkte Platten).</li>
                         <li><strong>Verkabelung:</strong> 2x Assembler (benötigt Stator & Kabel).</li>
-                        <li><strong>Modulmotoren:</strong> 2x Hersteller (Manufacturer) – benötigt Motoren, Gummis, Smartes Blech und Schrauben. Sorge für eine stabile Öl-Kette für Kunststoff & Gummi!</li>
+                        <li><strong>Modulmotoren:</strong> 2x Hersteller (Manufacturer) – benötigt Motoren, Gummis, Smartes Blech und Schrauben.</li>
                     </ul>
                 `;
             } else if (phase === "3") {
@@ -258,50 +258,32 @@
                     <p><strong>Erforderliche Lieferungen:</strong><br>
                     - 2.500x Vielseitiges Framework<br>
                     - 500x Modulmotor<br>
-                    - 100x Adaptive Steuereinheit (Adaptive Control Unit)</p>
+                    - 100x Adaptive Steuereinheit</p>
                     <p><strong>Freischaltungen:</strong> Tiers 7 & 8 (Aluminium-Verarbeitung, Kernkraft, Drohnen, Hoverpack).</p>
-                    <h4>🏭 Empfohlene Maschinen-Struktur:</h4>
-                    <ul>
-                        <li><strong>Adaptive Steuereinheiten:</strong> 2x Hersteller – benötigen automatisierte Verkabelung, schwere modulare Rahmen, Computer und Gummi.</li>
-                        <li><strong>Tipp:</strong> Baue hier deine erste zentrale Aluminium-Fabrik (Bauxit zu Aluminiumoxid zu Aluminiumbarren), da du sie massenhaft für Kühlkörper und Funksteuerungen brauchst.</li>
-                    </ul>
                 `;
             } else if (phase === "4") {
                 html = `
                     <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 4 – Klassisches Endgame</h3>
                     <p><strong>Erforderliche Lieferungen:</strong><br>
-                    - 500x Montageleiter-System (Assembly Director System)<br>
-                    - 500x Magnetfeldgenerator (Magnetic Field Generator)<br>
-                    - 250x Thermische Antriebsrakete (Thermal Propulsion Rocket)<br>
-                    - 100x Nukleare Pasta (Nuclear Pasta)</p>
-                    <p><strong>Freischaltungen:</strong> Tier 9 / Vorbereitung auf Phase 5.</p>
-                    <h4>🏭 Wichtige Hinweise:</h4>
-                    <ul>
-                        <li><strong>Nukleare Pasta:</strong> Erfordert <strong>Partikelbeschleuniger</strong> (jeweils 1.500 MW Strombedarf!). Baue dafür ein massives Kernkraft- oder Turbokraftwerk-Polster.</li>
-                        <li>Verwende den 4x4 Blueprint Designer, um modulare Supercomputer- und Kühlkörper-Linien hochzuziehen.</li>
-                    </ul>
+                    - 500x Montageleiter-System<br>
+                    - 500x Magnetfeldgenerator<br>
+                    - 250x Thermische Antriebsrakete<br>
+                    - 100x Nukleare Pasta</p>
                 `;
             } else if (phase === "5") {
                 html = `
                     <h3 style="color:var(--ficsit-orange); margin-top:0;">🔍 Phase 5 – Satisfactory 1.0 Quanten-Finale</h3>
                     <p><strong>Erforderliche Lieferungen:</strong><br>
                     - 1.000x Nukleare Pasta<br>
-                    - 1.000x Biochemischer Former (Biochemical Sculptor)<br>
-                    - 256x KI-Erweiterungsserver (AI Expansion Server)<br>
-                    - 200x Ballistischer Warpantrieb (Ballistic Warp Drive)</p>
-                    <p><strong>Freischaltungen:</strong> Projektabschluss (Sieg von Satisfactory 1.0).</p>
-                    <h4>🏭 Endstufen-Fokus:</h4>
-                    <ul>
-                        <li>Nutze Quanten-Ressourcen und Dunkle Materie (Dark Matter) aus den interdimensionalen Extraktoren.</li>
-                        <li>Stelle sicher, dass deine High-Speed-Verbinder- und Supercomputer-Ketten auf Höchstleistung laufen, um den Ballistischen Warpantrieb zu füttern.</li>
-                    </ul>
+                    - 1.000x Biochemischer Former<br>
+                    - 256x KI-Erweiterungsserver<br>
+                    - 200x Ballistischer Warpantrieb</p>
                 `;
             }
 
             document.getElementById('phaseDetailContainer').innerHTML = html;
         }
 
-        // Rechner Logik
         function calculate() {
             const item = document.getElementById('itemSelect').value;
             const target = parseFloat(document.getElementById('targetRate').value) || 0;
@@ -348,7 +330,6 @@
             document.getElementById('calcResult').innerHTML = outputHTML;
         }
 
-        // Checklisten-Logik
         const tasks = [
             "Phase 1 erreicht & Smartes Blech automatisiert",
             "Kohlekraftwerk zur automatischen Stromversorgung errichtet",
@@ -374,7 +355,6 @@
             localStorage.setItem('ficsit_master_task_' + index, isChecked);
         }
 
-        // Initialisierung beim Start
         updatePhaseDetails();
         calculate();
     </script>
